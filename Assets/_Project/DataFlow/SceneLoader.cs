@@ -21,12 +21,14 @@ namespace DataFlow
 
         public SceneLoader()
         {
+            Debug.LogWarning($"2 _ {GetType().Name} initialized");
+
             _sceneStateSubject = new ReactiveProperty<SceneLoadState>().AddTo(_disposables);
 
             _sceneStateSubject.Select(x => x == SceneLoadState.Loading)
                 .DistinctUntilChanged()
                 .Subscribe(
-                    x => { }
+                    x => { Debug.LogWarning($"2 _ update in {GetType().Name} {x}"); }
                 ).AddTo(_disposables);
         }
 
@@ -78,14 +80,14 @@ namespace DataFlow
         {
             if (string.IsNullOrEmpty(_currentSceneName))
             {
-                Debug.Log($"There is no scene to upload, _currentSceneName is empty.");
+                // Debug.Log($"There is no scene to upload, _currentSceneName is empty.");
                 return;
             }
 
             var scene = SceneManager.GetSceneByName(_currentSceneName);
             if (!scene.IsValid() || !scene.isLoaded)
             {
-                Debug.Log($"Scene {_currentSceneName} is already unloaded, skip the upload.");
+                // Debug.Log($"Scene {_currentSceneName} is already unloaded, skip the upload.");
                 _currentSceneName = null;
                 _sceneStateSubject.SetValueAndForceNotify(SceneLoadState.Unloaded);
 
@@ -99,7 +101,7 @@ namespace DataFlow
                 try
                 {
                     await unloadOperation.ToUniTask();
-                    Debug.Log($"Scene {_currentSceneName} is unloaded.");
+                    // Debug.Log($"Scene {_currentSceneName} is unloaded.");
                 }
                 catch (Exception e)
                 {
@@ -120,11 +122,11 @@ namespace DataFlow
         {
             if (_currentSceneName == Scenes.Boot)
             {
-                Debug.Log($"The {Scenes.Boot} scene is already loaded, skip it.");
+                // Debug.Log($"The {Scenes.Boot} scene is already loaded, skip it.");
                 return;
             }
 
-            Debug.Log($"Start loading the scene {Scenes.Boot}");
+            // Debug.Log($"Start loading the scene {Scenes.Boot}");
             var loadOperation = SceneManager.LoadSceneAsync(Scenes.Boot, LoadSceneMode.Single);
             if (loadOperation == null)
                 throw new NullReferenceException($"Failed to load the scene {Scenes.Boot}");
@@ -132,25 +134,25 @@ namespace DataFlow
             loadOperation.allowSceneActivation = false;
             while (loadOperation.progress < 0.9f)
             {
-                Debug.Log($"Loading progress {Scenes.Boot}: {loadOperation.progress * 100}%");
+                // Debug.Log($"Loading progress {Scenes.Boot}: {loadOperation.progress * 100}%");
                 await UniTask.Yield();
             }
 
             loadOperation.allowSceneActivation = true;
             while (!loadOperation.isDone)
             {
-                Debug.Log(
-                    $"Waiting for the scene to activate {Scenes.Boot}, progress: {loadOperation.progress * 100}%");
+                // Debug.Log(
+                //     $"Waiting for the scene to activate {Scenes.Boot}, progress: {loadOperation.progress * 100}%");
                 await UniTask.Yield();
             }
 
-            Debug.Log($"Scene {Scenes.Boot} fully loaded and activated.");
+            // Debug.Log($"Scene {Scenes.Boot} fully loaded and activated.");
             _currentSceneName = Scenes.Boot;
         }
 
         private async UniTask LoadAndConfigureSceneAsync(string sceneName, SceneParameters parameters)
         {
-            Debug.Log($"Begin loading the scene {sceneName}");
+            // Debug.Log($"Begin loading the scene {sceneName}");
             var loadOperation = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
             if (loadOperation == null)
                 throw new NullReferenceException($"Failed to load the scene {sceneName}");
@@ -158,7 +160,7 @@ namespace DataFlow
             loadOperation.allowSceneActivation = false;
             while (loadOperation.progress < 0.9f)
             {
-                Debug.Log($"Loading progress {sceneName}: {loadOperation.progress * 100}%");
+                // Debug.Log($"Loading progress {sceneName}: {loadOperation.progress * 100}%");
                 await UniTask.Yield();
             }
 
@@ -188,16 +190,16 @@ namespace DataFlow
             loadOperation.allowSceneActivation = true;
             while (!loadOperation.isDone)
             {
-                Debug.Log($"Wait for scene {sceneName} to be activated, progress: {loadOperation.progress * 100}%");
+                // Debug.Log($"Wait for scene {sceneName} to be activated, progress: {loadOperation.progress * 100}%");
                 await UniTask.Yield();
             }
 
-            Debug.Log($"Scene {sceneName} is fully loaded and activated.");
+            // Debug.Log($"Scene {sceneName} is fully loaded and activated.");
         }
 
         public void Dispose()
         {
-            Debug.LogWarning("______  1 x ______Dispose ui scenloader");
+            Debug.LogWarning($"2 _ {GetType().Name} disposed");
             _sceneStateSubject.Dispose();
         }
     }

@@ -15,7 +15,7 @@ namespace Global.Testing
 
         public TestService(ISceneLoader sceneLoader)
         {
-            Debug.LogWarning("1 _ TestService initialized");
+            Debug.LogWarning($"1 _ {GetType().Name} initialized");
 
             sceneLoader.sceneStateSubject
                 .Subscribe(x => { Debug.LogWarning($"1 _ update in sceneStateSubject {x}"); })
@@ -25,7 +25,7 @@ namespace Global.Testing
         public void Dispose()
         {
             _disposables.Dispose();
-            Debug.LogWarning($"1 _ sceneStateSubject disposed");
+            Debug.LogWarning($"1 _ {GetType().Name} disposed");
         }
     }
 }
