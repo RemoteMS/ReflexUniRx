@@ -12,7 +12,7 @@ namespace DataFlow
 {
     public class SceneLoader : ISceneLoader, IDisposable
     {
-        public IReadOnlyReactiveProperty<SceneLoadState> sceneStateSubject => _sceneStateSubject;
+        public IReadOnlyReactiveProperty<SceneLoadState> sceneStateStatus => _sceneStateSubject;
         private readonly ReactiveProperty<SceneLoadState> _sceneStateSubject;
 
         private string _currentSceneName = null;

@@ -17,7 +17,7 @@ namespace Global.Testing
         {
             Debug.LogWarning($"1 _ {GetType().Name} initialized");
 
-            sceneLoader.sceneStateSubject
+            sceneLoader.sceneStateStatus
                 .Subscribe(x => { Debug.LogWarning($"1 _ update in sceneStateSubject {x}"); })
                 .AddTo(_disposables);
         }

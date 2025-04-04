@@ -8,6 +8,6 @@ namespace DataFlow.Interfaces
     {
         UniTask LoadGamePlay();
         UniTask LoadMainMenu();
-        IReadOnlyReactiveProperty<SceneLoadState> sceneStateSubject { get; }
+        IReadOnlyReactiveProperty<SceneLoadState> sceneStateStatus { get; }
     }
 }
