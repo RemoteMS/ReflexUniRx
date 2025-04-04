@@ -1,7 +1,6 @@
 using DataFlow.Interfaces;
 using Global.Testing;
 using Reflex.Core;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class App
@@ -13,31 +12,18 @@ public class App
     private readonly ISceneLoader _sceneLoader;
     private readonly ITestService _testService;
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    public static void AutostartGame()
+    // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    public static void AutostartGame(Container projectRootContainer)
     {
-        _instance = new App();
+        _instance = new App(projectRootContainer);
         _instance.RunGame();
     }
 
-    private App()
+    private App(Container rootContainer)
     {
-        _rootContainer = CreateProjectContainer.Create();
+        _rootContainer = rootContainer;
         _sceneLoader = _rootContainer.Resolve<ISceneLoader>();
         _testService = _rootContainer.Resolve<ITestService>();
-
-        var asyncSceneLoader = new GameObject("[AsyncSceneLoader]");
-        Object.DontDestroyOnLoad(asyncSceneLoader);
-
-        var scopes = new GameObject("[SCOPE]");
-        Object.DontDestroyOnLoad(scopes);
-
-        // you can remove it
-        var k = new GameObject("[TestServiceKeeper]");
-        var testServiceKeeper = k.AddComponent<TestServiceKeeper>();
-        testServiceKeeper.keeper = _testService;
-        Object.DontDestroyOnLoad(k);
-        // you can remove it
     }
 
     private async void RunGame()

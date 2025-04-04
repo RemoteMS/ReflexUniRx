@@ -16,6 +16,16 @@ namespace Core.DI
 
             builder.AddSingleton(typeof(SceneLoader), new[] { typeof(ISceneLoader), typeof(IDisposable) });
             builder.AddSingleton(typeof(TestService), new[] { typeof(ITestService), typeof(IDisposable) });
+
+            builder.OnContainerBuilt += OnBuild;
+        }
+
+        private void OnBuild(Container obj)
+        {
+            obj.Resolve<ISceneLoader>();
+            obj.Resolve<ITestService>();
+
+            App.AutostartGame(obj);
         }
     }
 }
